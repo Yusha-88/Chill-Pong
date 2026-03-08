@@ -23,6 +23,9 @@ ball_velocity = [3,5]
 rect_movement_velocity = 10
 game_running = True
 
+player_score = 0
+ai_score = 0
+
 # Load mixer and play music
 pygame.mixer.init()
 music_player = pygame.mixer.music
@@ -46,7 +49,7 @@ while game_running:
     # Ball physics
     ball_x_pos += ball_velocity[0]
     ball_y_pos += ball_velocity[1]
-    if ball_x_pos >= 1260 or ball_x_pos < 0:
+    if ball_x_pos >= 1260: # or ball_x_pos < 0: COMMENTED OUT FOR TESTING #
         ball_velocity[0] = -ball_velocity[0]
     # Top/bottom walls
     if ball_y_pos <= 0 or ball_y_pos >= 1000:
@@ -61,14 +64,18 @@ while game_running:
 
     # Detect collisions
     if player.colliderect(ball):
-        
-        ball_velocity[0] = -ball_velocity[0]
+        # Checks if ball hits top of the paddle
+        if ball_y_pos < player.y:
+            player.y = ball_y_pos
+            ball_velocity[1] = -ball_velocity[1]
+        else:
+            player.x = ball_x_pos
+            player.y = ball_y_pos
+            ball_velocity[0] = -ball_velocity[0]
 
-        # # if player top paddle collides, then send up
-        # if ball.y < rect_y_pos + rect_height // 2:
-        #     ball_velocity[1] = -abs(ball_velocity[1])
-        # elif player bottom paddle collides, then send down
     if ai.colliderect(ball):
+        ai.x = ball_x_pos
+        ai.y = ball_y_pos
         ball_velocity[0] = -ball_velocity[0]
 
     pygame.display.update()
