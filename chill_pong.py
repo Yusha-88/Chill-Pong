@@ -1,0 +1,76 @@
+import pygame
+pygame.init()
+
+game_window = pygame.display.set_mode((1000,1000), pygame.FULLSCREEN)
+black_color = (0,0,0)
+dark_slate = (30, 30, 45)
+white_color = (255,255,255)
+lavender = (201, 184, 232)
+
+game_music = 'chill_piano.wav'
+
+rect_x_pos = 0
+rect_y_pos = 200
+
+rect_width = 20
+rect_height = 200
+rect_centre = rect_height/2
+
+ball_x_pos = 630
+ball_y_pos = 500
+ball_velocity = [3,5]
+
+rect_movement_velocity = 10
+game_running = True
+
+# Load mixer and play music
+pygame.mixer.init()
+music_player = pygame.mixer.music
+music_player.load(game_music)
+music_player.play(-1, 0, 5)
+
+while game_running:
+    pygame.time.delay(10)
+    keys = pygame.key.get_pressed()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
+            game_running = False
+
+    # Player controls
+    if keys[pygame.K_w] and rect_y_pos>0:
+        rect_y_pos -= rect_movement_velocity
+    if keys[pygame.K_s] and rect_y_pos<1000-rect_height:
+        rect_y_pos += rect_movement_velocity
+
+    # Ball physics
+    ball_x_pos += ball_velocity[0]
+    ball_y_pos += ball_velocity[1]
+    if ball_x_pos >= 1260 or ball_x_pos < 0:
+        ball_velocity[0] = -ball_velocity[0]
+    # Top/bottom walls
+    if ball_y_pos <= 0 or ball_y_pos >= 1000:
+        ball_velocity[1] = -ball_velocity[1]
+
+    # Draw sprites
+    game_window.fill(dark_slate)
+    player = pygame.draw.rect(game_window,lavender, (rect_x_pos, rect_y_pos, rect_width, rect_height))
+    player_top_paddle = pygame.draw.rect(game_window,lavender, (rect_x_pos, rect_y_pos, rect_width, rect_height//2))
+    ai = pygame.draw.rect(game_window, lavender, (1260, 0, rect_width, rect_height))
+    ball = pygame.draw.rect(game_window, white_color, (ball_x_pos, ball_y_pos, 20, 20))
+
+    # Detect collisions
+    if player.colliderect(ball):
+        
+        ball_velocity[0] = -ball_velocity[0]
+
+        # # if player top paddle collides, then send up
+        # if ball.y < rect_y_pos + rect_height // 2:
+        #     ball_velocity[1] = -abs(ball_velocity[1])
+        # elif player bottom paddle collides, then send down
+    if ai.colliderect(ball):
+        ball_velocity[0] = -ball_velocity[0]
+
+    pygame.display.update()
+
+pygame.quit()
