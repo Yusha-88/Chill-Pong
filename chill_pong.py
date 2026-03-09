@@ -1,4 +1,5 @@
 import pygame
+
 pygame.init()
 
 game_window = pygame.display.set_mode((1000,1000), pygame.FULLSCREEN)
@@ -23,8 +24,18 @@ ball_velocity = [3,5]
 rect_movement_velocity = 10
 game_running = True
 
+def display_score(header_text, player_score_int,x,y):
+    font20 = pygame.font.Font('freesansbold.ttf', 20)
+    text = font20.render(header_text + str(player_score_int),True, white_color)
+    text_rect = text.get_rect()
+    text_rect.center = (x,y)
+
+    game_window.blit(text, text_rect)
+
 player_score = 0
 ai_score = 0
+player_score_header = "Player Score: "
+ai_score_header = "AI Score: "
 
 # Load mixer and play music
 pygame.mixer.init()
@@ -51,6 +62,8 @@ while game_running:
     ball_y_pos += ball_velocity[1]
     if ball_x_pos >= 1260: # or ball_x_pos < 0: COMMENTED OUT FOR TESTING #
         ball_velocity[0] = -ball_velocity[0]
+    # elif ball_x_pos < 0:
+    #     ai_score += 1
     # Top/bottom walls
     if ball_y_pos <= 0 or ball_y_pos >= 1000:
         ball_velocity[1] = -ball_velocity[1]
@@ -77,6 +90,10 @@ while game_running:
         ai.x = ball_x_pos
         ai.y = ball_y_pos
         ball_velocity[0] = -ball_velocity[0]
+
+    # Display Player and AI scores
+    display_score(player_score_header, player_score,80,10)
+    display_score(ai_score_header, ai_score, 1200, 10)
 
     pygame.display.update()
 
