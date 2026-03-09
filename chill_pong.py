@@ -17,8 +17,11 @@ rect_width = 20
 rect_height = 200
 rect_centre = rect_height/2
 
-ball_x_pos = 630
-ball_y_pos = 500
+# Rendering ball to center of screen
+initial_x = 630
+initial_y = 500
+ball_x_pos = initial_x
+ball_y_pos = initial_y
 ball_velocity = [3,5]
 
 rect_movement_velocity = 10
@@ -31,6 +34,12 @@ def display_score(header_text, player_score_int,x,y):
     text_rect.center = (x,y)
 
     game_window.blit(text, text_rect)
+
+def reset_ball(x,y):
+    x = initial_x
+    y = initial_y
+
+    return x,y
 
 player_score = 0
 ai_score = 0
@@ -60,10 +69,12 @@ while game_running:
     # Ball physics
     ball_x_pos += ball_velocity[0]
     ball_y_pos += ball_velocity[1]
-    if ball_x_pos >= 1260: # or ball_x_pos < 0: COMMENTED OUT FOR TESTING #
-        ball_velocity[0] = -ball_velocity[0]
-    # elif ball_x_pos < 0:
-    #     ai_score += 1
+    if ball_x_pos >= 1260:
+        player_score += 1
+        ball_x_pos, ball_y_pos = reset_ball(ball_x_pos, ball_y_pos)
+    elif ball_x_pos < 0:
+        ai_score += 1
+        ball_x_pos, ball_y_pos = reset_ball(ball_x_pos, ball_y_pos)
     # Top/bottom walls
     if ball_y_pos <= 0 or ball_y_pos >= 1000:
         ball_velocity[1] = -ball_velocity[1]
