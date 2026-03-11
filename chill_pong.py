@@ -28,6 +28,7 @@ ball_y_pos = initial_y
 ball_velocity = [-3,5]
 
 rect_movement_velocity = 10
+ai_rect_movement_velocity = 4
 game_running = True
 
 def display_score(header_text, player_score_int,x,y):
@@ -44,6 +45,12 @@ def reset_ball(x,y):
     y = initial_y
 
     return x,y
+
+def move_ai_paddle(rect, velocity, ball_y_pos):
+    if rect.centery > ball_y_pos:
+        rect.y -= velocity
+
+
 
 player_score = 0
 ai_score = 0
@@ -69,10 +76,17 @@ while game_running:
         rect_y_pos -= rect_movement_velocity
     if keys[pygame.K_s] and rect_y_pos<1000-rect_height:
         rect_y_pos += rect_movement_velocity
-    if keys[pygame.K_UP] and ai_rect_y_pos > 0:
-        ai_rect_y_pos -= rect_movement_velocity
-    if keys[pygame.K_DOWN] and ai_rect_y_pos<1000-rect_height:
-        ai_rect_y_pos += rect_movement_velocity
+    # Commenting this out incase needed for manual testing
+    # if keys[pygame.K_UP] and ai_rect_y_pos > 0:
+    #     ai_rect_y_pos -= rect_movement_velocity
+    # if keys[pygame.K_DOWN] and ai_rect_y_pos<1000-rect_height:
+    #     ai_rect_y_pos += rect_movement_velocity
+
+    # AI controls
+    if (ai_rect_y_pos < ball_y_pos) and (ai_rect_y_pos<1000-rect_height):
+            ai_rect_y_pos += ai_rect_movement_velocity
+    elif (ai_rect_y_pos > ball_y_pos) and (ai_rect_y_pos>0):
+            ai_rect_y_pos -= ai_rect_movement_velocity
 
     # Ball physics
     ball_x_pos += ball_velocity[0]
