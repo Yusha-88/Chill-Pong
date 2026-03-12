@@ -28,7 +28,7 @@ ball_y_pos = initial_y
 ball_velocity = [-5,8]
 
 rect_movement_velocity = 10
-ai_rect_movement_velocity = 4
+ai_rect_movement_velocity = 6
 game_running = True
 
 def display_score(header_text, player_score_int,x,y):
@@ -45,10 +45,6 @@ def reset_ball(x,y):
     y = initial_y
 
     return x,y
-
-def move_ai_paddle(rect, velocity, ball_y_pos):
-    if rect.centery > ball_y_pos:
-        rect.y -= velocity
 
 player_score = 0
 ai_score = 0
@@ -106,28 +102,13 @@ while game_running:
     ai = pygame.draw.rect(game_window, lavender, (ai_rect_x_pos, ai_rect_y_pos, rect_width, rect_height))
     ball = pygame.draw.rect(game_window, white_color, (ball_x_pos, ball_y_pos, 20, 20))
 
-    # Detect collisions
-    # if player.colliderect(ball):
-    #     # Checks if ball hits top of the paddle
-    #     if ball_y_pos < player.top:
-    #         player.y = ball_y_pos
-    #         player.x = ball_x_pos
-    #         ball_velocity[1] = -ball_velocity[1]
-    #     else:
-    #         player.y = ball_y_pos
-    #         player.x = ball_x_pos
-    #         ball_velocity[0] = -ball_velocity[0]
-
+    # Detect collisions between paddle and ball
     if player.colliderect(ball):
-        player.y = ball_y_pos
-        player.x = ball_x_pos
         ball_x_pos = player.right
         ball_velocity[0] = -ball_velocity[0]
-
     if ai.colliderect(ball):
-        ai.x = ball_x_pos
-        ai.y = ball_y_pos
-        ball_x_pos = ai.left
+        # ball x coordinates draws from the left edge. Subtracting 15 accounts for the difference between the left edge and the right point of collision
+        ball_x_pos = ai.left - 15
         ball_velocity[0] = -ball_velocity[0]
 
     # Display Player and AI scores
