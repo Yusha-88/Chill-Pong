@@ -25,7 +25,7 @@ initial_x = 630
 initial_y = 500
 ball_x_pos = initial_x
 ball_y_pos = initial_y
-ball_velocity = [-3,5]
+ball_velocity = [-5,8]
 
 rect_movement_velocity = 10
 ai_rect_movement_velocity = 4
@@ -49,8 +49,6 @@ def reset_ball(x,y):
 def move_ai_paddle(rect, velocity, ball_y_pos):
     if rect.centery > ball_y_pos:
         rect.y -= velocity
-
-
 
 player_score = 0
 ai_score = 0
@@ -109,19 +107,27 @@ while game_running:
     ball = pygame.draw.rect(game_window, white_color, (ball_x_pos, ball_y_pos, 20, 20))
 
     # Detect collisions
+    # if player.colliderect(ball):
+    #     # Checks if ball hits top of the paddle
+    #     if ball_y_pos < player.top:
+    #         player.y = ball_y_pos
+    #         player.x = ball_x_pos
+    #         ball_velocity[1] = -ball_velocity[1]
+    #     else:
+    #         player.y = ball_y_pos
+    #         player.x = ball_x_pos
+    #         ball_velocity[0] = -ball_velocity[0]
+
     if player.colliderect(ball):
-        # Checks if ball hits top of the paddle
-        if ball_y_pos < player.y:
-            player.y = ball_y_pos
-            ball_velocity[1] = -ball_velocity[1]
-        else:
-            player.x = ball_x_pos
-            player.y = ball_y_pos
-            ball_velocity[0] = -ball_velocity[0]
+        player.y = ball_y_pos
+        player.x = ball_x_pos
+        ball_x_pos = player.right
+        ball_velocity[0] = -ball_velocity[0]
 
     if ai.colliderect(ball):
         ai.x = ball_x_pos
         ai.y = ball_y_pos
+        ball_x_pos = ai.left
         ball_velocity[0] = -ball_velocity[0]
 
     # Display Player and AI scores
