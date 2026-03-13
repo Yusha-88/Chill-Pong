@@ -2,20 +2,20 @@ import pygame
 
 pygame.init()
 
+# Initialising game window variables and colors
 game_window = pygame.display.set_mode((1000,1000), pygame.FULLSCREEN)
 black_color = (0,0,0)
 dark_slate = (30, 30, 45)
 white_color = (255,255,255)
 lavender = (201, 184, 232)
 
-game_music = 'chill_piano.wav'
-
+# Intialising x, y coordinates for both paddles.
 rect_x_pos = 0
 rect_y_pos = 200
-
 ai_rect_x_pos = 1260
 ai_rect_y_pos = 0
 
+# Setting paddle dimensions
 rect_width = 20
 rect_height = 200
 rect_centre = rect_height/2
@@ -25,10 +25,12 @@ initial_x = 630
 initial_y = 500
 ball_x_pos = initial_x
 ball_y_pos = initial_y
-ball_velocity = [-5,8]
 
+# Setting the ball and paddle movement speeds
+ball_velocity = [-5,8]
 rect_movement_velocity = 10
 ai_rect_movement_velocity = 6
+
 game_running = True
 
 def display_score(header_text, player_score_int,x,y):
@@ -40,18 +42,21 @@ def display_score(header_text, player_score_int,x,y):
 
     game_window.blit(text, text_rect)
 
+# Used whenever a point is scored
 def reset_ball(x,y):
     x = initial_x
     y = initial_y
 
     return x,y
 
+# Initialising player scores
 player_score = 0
 ai_score = 0
 player_score_header = "Player Score: "
 ai_score_header = "AI Score: "
 
 # Load mixer and play music
+game_music = 'chill_piano.wav'
 pygame.mixer.init()
 music_player = pygame.mixer.music
 music_player.load(game_music)
